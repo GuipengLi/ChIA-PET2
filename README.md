@@ -76,7 +76,7 @@ Important result files:
 - **prefixname.interactions.MICC**: significance estimation for each loops (13 columns)
 - **prefixname.QCplot.pdf**: Quality control figure for different steps of analysis.
 
-prefixname.interactions.MICC file has 11+2 columns. The last 2 columns ( **-log10(1-PostProbability)** and **FDR** ) are estimated by MICC based on a Bayesian mixture model. See the toy example below. This means the chromatin loop between peak_1(chr:9118-10409) with peak depth 3330 and peak_3(chr:89064-90360) with peak depth 3814 has 39 supportive pair-end tags(PETs). **-log10(1-PostProbability)=4.51** and **FDR=0.0498** .
+prefixname.interactions.MICC file has 11+2 columns. The last 2 columns ( **-log10(1-PostProbability)** and **FDR** ) are estimated by MICC based on a Bayesian mixture model. See the toy example below. This means the chromatin loop between peak_1(chr:9118-10409) with peak depth 3330 and peak_3(chr:89064-90360) with peak depth 3814 has 39 supportive pair-end tags(PETs). **-log10(1-PostProbability)=4.5** and **FDR=0.03** .
 
 |chr |start|end  |chr |start |end  |peak1 |peak2 |depth1|depth2|#PET|PP | FDR|
 |----|-----|-----|----|------|-----|------|------|------|------|----|---|----|
