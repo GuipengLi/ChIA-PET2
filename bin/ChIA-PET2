@@ -1,0 +1,305 @@
+#!/bin/bash
+
+## ChIA-PET2           
+## Copyleft 2016 Guipeng Li
+## Author: Guipeng Li
+## Contact: guipeng.lee@gmail.com
+## This software is distributed without any guarantee under the terms of the GNU General Public License, Version 3, June 2007.
+                                                                   
+SOFT="ChIA-PET2"
+VERSION="0.9.2"
+DATE="2016.04.19"
+
+function usage {
+    echo -e "usage : $SOFT -g genomeindex -b bedtoolsgenome -f fq1 -r fq2 -A linkerA -B linkerB -o OUTdir -n prefixname"
+    echo -e "Use option -h|--help for more information"
+}
+
+
+function help {
+    usage;
+    echo 
+    echo "$SOFT $VERSION   $DATE"
+    echo "----------------------------"
+    echo "OPTIONS"
+    echo
+    echo "   -s|--start : start from which step(1:8):  1:Trim Linkers; 2:Map Reads; 3:Build PETs; 4:Call Peaks; 5:Find Interactions; 6:Plot QC; 7:Estimate statistical confidence; 8:Phase PETs(optional), default=1"
+    echo "   -g|--genome : genome index for bwa"
+	echo "   -b|--bedtoolsgenome : chromsomes size file for bedtools"
+    echo "   -f|--forward : one fastq(.gz) file"
+    echo "   -r|--reverse : the other fastq(.gz) file"
+    echo "   -A|--linkerA : one linker sequence, default=GTTGGATAAG"
+    echo "   -B|--linkerB : the other linker sequence, default=GTTGGAATGT"
+    echo "   -o|--output : output folder, default=output"
+    echo "   -n|--name : output prefix name, default=out"
+    echo "   -m|--mode : 0,1,2;  0: A/B linkers; 1: bridge liker or 2: Enzyme site, default=0"
+    echo "   -e|--err : Maximum mismatches allowed in linker sequence, default=0"
+    echo "   -k|--keepempty : 0,1,2; 0: No linker-empty reads; 1: keep 1 linker-empty read; 2: keep 2 linker-empty reads, default=0"
+    echo "   -t|--thread : threads to run, default=1"
+    echo "   -d|--short : short reads (0 or 1), default=0"
+    echo "   -M|--macs2 parameters, default=\"-q 0.05\""
+    echo "   -Q|--mapq : mapq cutoff, default=30"
+    echo "   -C|--cutoffPET : PET count cutoff before running MICC, default=1"
+    echo "   -S|--slop : slop length, default=100"
+    echo "   -E|--extend : extend length on both sides, default=500"
+    echo "   -l|--length : min length of reads after linker trimming. default=15"
+    echo "   -P|--phased : optional phased genotype file: 'chr1\\tstart\\tend\\tA\\tC'"
+    echo "   [-h|--help]: help"
+    echo "   [-v|--version]: version"
+    exit;
+}
+
+function version {
+    echo -e "$SOFT version $VERSION   $DATE"
+    exit
+}
+
+function opts_error {
+    echo -e "Error : invalid parameters !" >&2
+    echo -e "Use $SOFT -h for help"
+    exit
+}
+
+
+
+if [ $# -lt 1 ]
+then
+    usage
+    exit
+fi
+
+# Transform long options to short ones
+for arg in "$@"; do
+  shift
+  case "$arg" in
+      "--genome") set -- "$@" "-g" ;;
+      "--bedtoolsgenome") set -- "$@" "-b" ;;
+      "--mode") set -- "$@" "-m" ;;
+      "--err")   set -- "$@" "-e" ;;
+      "--keepempty")   set -- "$@" "-k" ;;
+      "--macs2")   set -- "$@" "-M" ;;
+      "--mapq")   set -- "$@" "-Q" ;;
+      "--cutoffPET")   set -- "$@" "-C" ;;
+      "--slop")   set -- "$@" "-S" ;;
+      "--extend")   set -- "$@" "-E" ;;
+      "--length")   set -- "$@" "-l" ;;
+      "--linkerA")   set -- "$@" "-A" ;;
+      "--linkerB")   set -- "$@" "-B" ;;
+      "--output")   set -- "$@" "-o" ;;
+      "--nmae")   set -- "$@" "-n" ;;
+      "--thread")   set -- "$@" "-t" ;;
+      "--forward")   set -- "$@" "-f" ;;
+      "--reverse")   set -- "$@" "-r" ;;
+      "--short")   set -- "$@" "-d" ;;
+      "--phased")   set -- "$@" "-P" ;;
+      "--help")   set -- "$@" "-h" ;;
+      "--version")   set -- "$@" "-v" ;;
+      *)        set -- "$@" "$arg"
+  esac
+done
+
+# default parameters
+START=1
+MODE=0
+ERR=0
+KEEPEMPTY=0
+OUTDIR="output"
+NAME="out"
+THREAD=1
+MAPQ=30
+MACS2="-q 0.05"
+LENGTH=15
+SLOPLEN=100
+EXTEND=500
+LINKER_A="GTTGGATAAG"
+LINKER_B="GTTGGAATGT"
+SL=0 
+CUTOFFPET=1
+
+while getopts "s:b:g:m:e:k:M:Q:C:S:E:l:A:B:o:n:t:f:r:d:P:vh" OPT
+do
+    case $OPT in
+	s) START=$OPTARG;;
+	g) GENOME=$OPTARG;;
+	b) BGENOME=$OPTARG;;
+	m) MODE=$OPTARG;;
+	e) ERR=$OPTARG;;
+	k) KEEPEMPTY=$OPTARG;;
+	Q) MAPQ=$OPTARG;;
+	C) CUTOFFPET=$OPTARG;;
+	M) MACS2=$OPTARG;;
+	S) SLOPLEN=$OPTARG;;
+	E) EXTEND=$OPTARG;;
+	l) LENGTH=$OPTARG;;
+	A) LINKER_A=$OPTARG;;
+	B) LINKER_B=$OPTARG;;
+	o) OUTDIR=$OPTARG;;
+	n) NAME=$OPTARG;;
+	t) THREAD=$OPTARG;;
+	f) FORWARD=$OPTARG;;
+	r) REVERSE=$OPTARG;;
+	d) SL=$OPTARG;;
+	P) PHASE=$OPTARG;;
+	v) version ;;
+	h) help ;;
+	\?)
+	     echo "Invalid option: -$OPTARG" >&2
+	     usage
+	     exit 1
+	     ;;
+	 :)
+	     echo "Option -$OPTARG requires an argument." >&2
+	     usage
+	     exit 1
+	     ;;
+    esac
+done
+
+if [[ -z $GENOME || -z $FORWARD || -z $REVERSE || -z $LINKER_A || -z $LINKER_B || $START -lt 1 || $START -gt 8 ]]; then
+    usage
+    exit
+fi
+if [ ! -s $BGENOME ];then
+    echo "chromosome size file requred for bedtools." >&2
+    usage
+    exit
+fi
+
+
+## Set PATHS
+BIN_PATH=`dirname $0`
+ABS_BIN_PATH=`cd "$BIN_PATH"; pwd`
+set -e
+. $BIN_PATH/utils
+
+fname=$OUTDIR/$NAME
+
+echo -e "[`date +"%m-%d %T"`] Start ChIA-PET2 V$VERSION  ...\n"
+
+if [ ! -d "$OUTDIR" ]; then
+	mkdir $OUTDIR
+fi
+
+if [ $START -le 1 ]; then
+	echo -e "\n[`date +"%m-%d %T"`] Running Step 1: Trim Linker ...\n"
+	if [[ -e $FORWARD && -e $REVERSE ]]; then
+		cmd="trimLinker -t $THREAD -m $MODE -k $KEEPEMPTY -e $ERR -l $LENGTH -o $OUTDIR -n $NAME -A $LINKER_A -B $LINKER_B $FORWARD $REVERSE"
+		exec_cmd $cmd
+	else
+		die "Input do not exists..."
+	fi
+fi
+
+if [ $START -le 2 ]; then
+	echo -e "\n[`date +"%m-%d %T"`] Running Step 2: BWA ...\n"
+	if [ -s ${fname}_1.valid.fastq ]; then
+		cmd="bwa_wrap $GENOME ${fname}_1.valid.fastq $THREAD ${fname}_1.valid.sam $SL"
+		exec_cmd $cmd
+	else
+ 		die "Please check input or Rerun step 2"
+	fi
+
+	if [[ -s ${fname}_1.valid.sam && -s ${fname}_2.valid.fastq  ]]; then
+		cmd="bwa_wrap $GENOME ${fname}_2.valid.fastq $THREAD ${fname}_2.valid.sam $SL"
+		exec_cmd $cmd || { echo "Please ensure ..." 1>&2; exit; }
+	else
+ 		die "Please check input or Rerun step 2"
+	fi
+fi
+
+if [ $START -le 3 ]; then
+	echo -e "\n[`date +"%m-%d %T"`] Running Step 3: Build Bedpe ...\n"
+	if [[ -s ${fname}_1.valid.sam && -s ${fname}_2.valid.sam ]]; then
+		cmd="buildBedpe ${fname}_1.valid.sam ${fname}_2.valid.sam  ${fname}.bedpe $MAPQ $THREAD"
+		if [ ! -s $PHASE ]; then
+			cmd="buildBedpe ${fname}_1.valid.sam ${fname}_2.valid.sam  ${fname}.bedpe $MAPQ $THREAD 1"
+		fi	
+		exec_cmd $cmd
+	else
+ 		die "Please check input or Rerun step 3"
+	fi
+
+	if [ -s ${fname}.bedpe ]; then
+		cmd="removeDup ${fname}.bedpe ${fname}.rmdup.bedpe $THREAD"
+		exec_cmd $cmd
+	else
+ 		die "Please check input or Rerun step 3"
+	fi
+
+	if [ -s ${fname}.rmdup.bedpe ]; then
+		cmd="buildTagAlign ${fname}.rmdup.bedpe ${fname}.rmdup.bedpe.tag"
+		exec_cmd $cmd
+	else
+ 		die "Please check input or Rerun step 3"
+	fi
+fi
+
+if [ $START -le 4 ]; then
+	echo -e "\n[`date +"%m-%d %T"`] Running Step 4: MACS2 ...\n"
+	if [ -s ${fname}.rmdup.bedpe.tag ]; then
+		cmd="macs2_wrap ${fname}.rmdup.bedpe.tag ${fname} \""$MACS2"\""
+		exec_cmd $cmd
+	else
+ 		die "Please check input or Rerun step 4"
+	fi
+fi
+
+
+if [ $START -le 5 ]; then
+	echo -e "\n[`date +"%m-%d %T"`] Running Step 5: Detect Interactions ...\n"
+	if [ -s ${fname}_peaks.narrowPeak ]; then
+		cmd="extendpeak ${fname}_peaks.narrowPeak $EXTEND ${fname}_peaks.slopPeak"
+		exec_cmd $cmd
+	else
+ 		die "Please check input or Rerun the step 5"
+	fi
+
+	if [ -s ${fname}_peaks.slopPeak ]; then
+		cmd="peak_depth2 ${fname}.rmdup.bedpe.tag $SLOPLEN ${fname}_peaks.slopPeak ${fname}.peaks.depth"
+		exec_cmd $cmd
+	else
+ 		die "Please check input or Rerun the step 5"
+	fi
+
+	if [ -s ${fname}.peaks.depth ]; then
+		cmd="build_interaction ${fname}.rmdup.bedpe ${fname}.peaks.depth ${fname}.interactions ${fname}.bedpe.stat"
+		exec_cmd $cmd
+	else
+ 		die "Please check input or Rerun step 5"
+	fi
+fi
+
+if [ $START -le 6 ]; then
+	echo -e "\n[`date +"%m-%d %T"`] Running Step 6: QCplots ...\n"
+	if [[ -s ${fname}.bedpe.stat && -s ${fname}.trim.stat && -s ${fname}.interactions.intra.bedpe && -s ${fname}.interactions.inter.bedpe ]]; then
+		cmd="Rscript $BIN_PATH/QCplots.R $OUTDIR $NAME"
+		exec_cmd $cmd
+	else
+ 		echo "Please check input or Rerun step 6"
+	fi
+fi
+
+if [ $START -le 7 ]; then
+	echo -e "\n[`date +"%m-%d %T"`] Running Step 7: MICC ...\n"
+	miccIintra=${fname}.interactions.intra.bedpe
+	miccIinter=${fname}.interactions.inter.bedpe
+	miccOUT=${fname}.interactions.MICC
+	if [[ -s ${miccIintra} && -s ${miccIinter} ]]; then
+		cmd="Rscript $BIN_PATH/MICC2.R $miccIintra $miccIinter $miccOUT $CUTOFFPET"
+		exec_cmd $cmd
+	else
+ 		echo "File not exists. Please check input $miccIintra"
+	fi
+fi
+
+if [[ -s $PHASE && $START -le 8 ]]; then
+	echo -e "\n[`date +"%m-%d %T"`] Running Step 8: Allele-specific Analysis ...\n"
+	if [ -s ${fname}.rmdup.bedpe ]; then
+		cmd="build_allele ${fname}.rmdup.bedpe $PHASE ${fname}.phased.bedpe"
+		exec_cmd $cmd
+	else
+ 		die "Please check input or Rerun step 8"
+	fi
+fi	
+
+echo -e "\n[`date +"%m-%d %T"`] Finish ChIA-PET2 Analysis.\n"

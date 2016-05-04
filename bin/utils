@@ -1,0 +1,211 @@
+#!/bin/bash
+
+## ChIA-PET2           
+## Copyleft 2016 Guipeng Li
+## Author: Guipeng Li
+## Contact: guipeng.lee@gmail.com
+## This software is distributed without any guarantee under the terms of the GNU General
+## Public License, either Version 2, June 1991 or Version 3, June 2007.
+
+
+
+die() 
+{
+     echo "Exit: $@" 1>&2
+     exit 1
+}
+
+
+exec_cmd()
+{
+    echo $*
+    if [ -z "$DRY_RUN" ]; then
+	eval "$@" ##|| die 'Error'
+    fi
+}
+
+exec_ret()
+{
+    if [ -z "$DRY_RUN" ]; then
+	eval "$@" ##|| die 'Error'
+    fi
+}
+
+## BWA wrapper
+bwa_wrap()
+{
+    local REF="$1"
+    local fqfile="$2"
+    local thread="$3"
+    local outsam="$4"
+    local short="$5"
+    local cmd
+
+    echo "Running BWA on trimmed reads ..."
+    ## Run bowtie
+	if [ "$short" == "1" ]; then
+		cmd="bwa aln -t $thread $REF $fqfile > $fqfile.sai; bwa samse $REF $fqfile.sai $fqfile > $outsam"
+    	exec_cmd $cmd || { echo "ERROR in running bwa ..." 1>&2; exit; }
+	else
+		cmd="bwa mem -t $thread $REF $fqfile | samtools view -h -F 2048 - > $outsam"
+    	exec_cmd $cmd || { echo "ERROR in running bwa ..." 1>&2; exit; }
+	fi
+}
+
+macs2_wrap()
+{
+    local tagfile="$1"
+    local peaksfile="$2"
+    local opts="$3"
+    echo "Running Macs2..."
+    cmd="macs2 callpeak -t $tagfile -f BED --keep-dup all -n $peaksfile "$opts""
+    exec_cmd $cmd || { echo "ERROR in running Macs2 ..." 1>&2; exit; }
+	if [ -e ${peaksfile}_peaks.xls ]; then
+		cmd2="rm ${peaksfile}_model.r ${peaksfile}_peaks.xls"
+    	exec_cmd $cmd2
+	fi
+}
+
+extendpeak()
+{
+    local peaksfile="$1"
+    local peakextend="$2"
+    local peaksfileslop="$3"
+    echo "Running  extendpeak..."
+    cmd="bedtools slop -i $peaksfile -g $BGENOME -b $peakextend | bedtools merge -d 256 > $peaksfileslop"
+    exec_cmd $cmd || { echo "ERROR in extendpeak ..." 1>&2; exit; }
+    cmd="awk 'BEGIN{OFS=\"\t\";i=1}{print \$1,\$2,\$3,\"peak_\"i;i=i+1}' $peaksfileslop > tmp.bed; mv tmp.bed $peaksfileslop"
+    exec_cmd $cmd
+}
+
+peak_depth()
+{
+    local tagfile="$1"
+    local extendreads="$2"
+    local peaksfileslop="$3"
+    local peaksdepth="$4"
+    echo "Running peakdepth..."
+    cmd1="bedtools slop -l 0 -r $extendreads -s -i $tagfile -g $BGENOME > $tagfile.tmp"
+    exec_cmd $cmd1 || { echo "ERROR in peakdepth ..." 1>&2; exit; }
+    cmd2="bedtools intersect -wo -a $tagfile.tmp -b $peaksfileslop > $tagfile.overlapeak"
+    exec_cmd $cmd2
+    cmd3="tag2Depth $tagfile.overlapeak $peaksdepth"
+    exec_cmd $cmd3
+    cmd4="rm $tagfile.tmp $tagfile.overlapeak"
+    exec_cmd $cmd4
+}
+
+peak_depth2()
+{
+    local tagfile="$1"
+    local extendreads="$2"
+    local peaksfileslop="$3"
+    local peaksdepth="$4"
+    echo "Running peakdepth..."
+    #cmd1="bedtools slop -l 0 -r $extendreads -s -i $tagfile -g $BGENOME  > $tagfile.tmp"
+    #exec_cmd $cmd1 || { echo "ERROR in peakdepth ..." 1>&2; exit; }
+	cmdsort="psort $tagfile $tagfile.sorted > /dev/null 2>&1"
+	exec_cmd $cmdsort
+    cmd2="bedtools coverage -sorted -b $tagfile.sorted -a $peaksfileslop -counts > $peaksdepth"
+    exec_cmd $cmd2
+    #cmd4="rm $tagfile.tmp"
+    #exec_cmd $cmd4
+}
+
+build_interaction()
+{
+    local bedpe="$1"
+    local peaksdepth="$2"
+    local interactionfile="$3"
+    local statfile="$4"
+    echo "Running build_interaction..."
+	
+    cmd1="pairToBed -a $bedpe -b $peaksdepth -type both > $bedpe.tmp"
+    exec_cmd $cmd1
+    cmd2="bedpe2Interaction $bedpe.tmp $interactionfile $statfile"
+    exec_cmd $cmd2
+    cmd3="rm $bedpe.tmp"
+    #exec_cmd $cmd3
+}
+
+build_allele()
+{
+    local bedpe="$1"
+    local phasedvcf="$2"
+    local outputprefix="$3"
+    echo "Running build_allele..."
+	
+    cmd1="grep -v \"*\" $bedpe > $bedpe.both"
+    exec_cmd $cmd1
+    cmd2="pairToBed -a $bedpe.both -b $phasedvcf -type either > $bedpe.both.invcf"
+    exec_cmd $cmd2
+    cmd2="bedpe2Phased $bedpe.both.invcf $outputprefix"
+    exec_cmd $cmd2
+    cmd3="rm $bedpe.both $bedpe.both.invcf"
+    #exec_cmd $cmd3
+}
+
+
+merge_stats()
+{
+	local trim1="$1"
+	local bedpe1="$2"
+	local trim2="$3"
+	local bedpe2="$4"
+	local outtrim="$5"
+	local outbedpe="$6"
+	if [[ "$trim1" == *.trim.stat && "$bedpe1" == *.bedpe.stat  ]]; then
+		paste $trim1 $trim2 | awk -v FS="\t" -v OFS="\t" '{print $1,$2+$4}' > $outtrim
+		paste $bedpe1 $bedpe2 | awk -v FS="\t" -v OFS="\t" '{print $1,$2+$4}' > $outbedpe
+	else
+		echo "Wrong input."
+	fi
+}
+
+
+
+psort()
+{
+	MAX_LINES_PER_CHUNK=10000000
+	ORIGINAL_FILE=$1
+	SORTED_FILE=$2
+	CHUNK_FILE_PREFIX=$ORIGINAL_FILE.split.
+	SORTED_CHUNK_FILES=$CHUNK_FILE_PREFIX*.sorted
+
+	usage ()
+	{
+		echo Parallel sort
+		echo usage: psort file1 file2
+		echo Sorts text file file1 and stores the output in file2
+		echo Note: file1 will be split in chunks up to $MAX_LINES_PER_CHUNK lines
+		echo  and each chunk will be sorted in parallel
+		exit;
+	}
+
+	# test if we have two arguments on the command line
+	if [ $# != 2 ]
+	then
+		usage
+	fi
+
+	#Cleanup any lefover files
+	rm -f $SORTED_CHUNK_FILES > /dev/null
+	rm -f $CHUNK_FILE_PREFIX* > /dev/null
+	rm -f $SORTED_FILE
+
+	#Splitting $ORIGINAL_FILE into chunks ...
+	split -l $MAX_LINES_PER_CHUNK $ORIGINAL_FILE $CHUNK_FILE_PREFIX
+
+	for file in $CHUNK_FILE_PREFIX*
+	do
+		sort -k1,1 -k2,2n $file > $file.sorted &
+	done
+	wait
+
+	#Merging chunks to $SORTED_FILE ...
+	sort -m -k1,1 -k2,2n $SORTED_CHUNK_FILES > $SORTED_FILE
+
+	rm -f $SORTED_CHUNK_FILES > /dev/null
+	rm -f $CHUNK_FILE_PREFIX* > /dev/null
+}
+
