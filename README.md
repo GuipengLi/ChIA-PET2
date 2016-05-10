@@ -124,12 +124,7 @@ Toolkits
 
 **buildTagAlign:** build tag file from bedpe file for MACS2 input.
 
-    $ removeDup in.bedpe out.bed
-
-
-**buildTagAlign:** build tag file from bedpe file for MACS2 input.
-
-    $ removeDup in.bedpe out.bed
+    $ buildTagAlign in.bedpe out.tag.bed
 
 
 **bedpe2Interaction:** Detect chromatin interactions from bedpe file.
