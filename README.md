@@ -162,7 +162,7 @@ Please cite the following article if you use ChIA-PET2 in your research:
 
 - ChIA-PET2: an versatile and flexible pipeline for ChIA-PET data analysis (submitted)
 
-If you use MICC to call significant chromatin loops, please cite the following:
+If you use MICC to call significant chromatin loops (step 7 in the pipeline), please cite the following:
 
 - He C, Zhang MQ, Wang X: MICC: an R package for identifying chromatin interactions from ChIA-PET data. Bioinformatics 2015, 31:3832-3834.
 
