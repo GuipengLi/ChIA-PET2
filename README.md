@@ -12,10 +12,9 @@ Install
 
 ChIA-PET2 could be installed in a linux-like system. The ChIA-PET2 pipeline requires the following dependencies, which are usually already installed in a bioinformatics cluster.
 
-- [BWA](https://github.com/lh3/bwa) : for reads alignment
-- [MACS2](https://github.com/taoliu/MACS) : for peaks calling
-- [samtools](https://github.com/samtools/samtools) : for sam file manipulation
-- [bedtools](https://github.com/arq5x/bedtools2) : for bed/bedpe file manipulation
+- [MACS2](https://github.com/taoliu/MACS) v2.1.0+ recommended: for peaks calling
+- [samtools](https://github.com/samtools/samtools) v1.3+: for sam file manipulation
+- [bedtools](https://github.com/arq5x/bedtools2) v2.25.0+: for bed/bedpe file manipulation
 - [R](https://www.r-project.org/) with the ggplot2 and VGAM packages : for calling MICC and plotting Quality Control figure
 
 To install ChIA-PET2:
