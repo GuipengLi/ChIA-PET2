@@ -15,7 +15,7 @@ ChIA-PET2 could be installed in a linux-like system. The ChIA-PET2 pipeline requ
 - [BWA](https://github.com/lh3/bwa) v0.7.10+ : for reads alignment
 - [MACS2](https://github.com/taoliu/MACS) v2.1.0+ : for peaks calling
 - [samtools](https://github.com/samtools/samtools) v1.3+ : for sam file manipulation
-- [bedtools](https://github.com/arq5x/bedtools2) v2.25.0+ : for bed/bedpe file manipulation
+- [bedtools](https://github.com/arq5x/bedtools2) v2.24.0+ : for bed/bedpe file manipulation
 - [R](https://www.r-project.org/) with the ggplot2 and VGAM packages : for calling MICC and plotting Quality Control figure
 
 To install ChIA-PET2:
@@ -24,7 +24,7 @@ To install ChIA-PET2:
     cd ChIA-PET2
     make
 
-ChIA-PET2 will be installed in the bin directory in user home (~/bin) by default. It's recommended to set the bin/ directory to the PATH.
+ChIA-PET2 will be installed in the bin directory in user home (~/bin) by default. It's recommended to set the ~/bin directory to the PATH.
 
 
 Usage
@@ -94,8 +94,8 @@ Other intermediated files include:
 - prefixname.bedpe.stat
 
 
-Toolkits
---------
+Toolkit
+-------
 **trimLinker:** trim linker sequences in the pair-end fastq(.gz) files. There will be also a summary file named output.trim.stat
 
     $ Usage:   trimLinker [-option] [argument]
@@ -160,7 +160,7 @@ Citation
 
 Please cite the following article if you use ChIA-PET2 in your research:
 
-- ChIA-PET2: an versatile and flexible pipeline for ChIA-PET data analysis (submitted)
+- Li GP, Chen Y, Snyder MP, Zhang MQ: ChIA-PET2: an versatile and flexible pipeline for ChIA-PET data analysis (submitted)
 
 If you use MICC to call significant chromatin loops (step 7 in the pipeline), please cite the following:
 
