@@ -1,4 +1,4 @@
-## ChIA-PET2           
+## ChIA-PET2
 ## Copyleft 2015 Tsinghua University
 ## Author: Guipeng Li
 ## Contact: guipeng.lee@gmail.com
@@ -70,6 +70,7 @@ bedpe2Matrix: $(SOURCES)/bedpe2Matrix.cpp
 cp:
 ifneq ($(realpath $(MK_PATH)), $(realpath $(PREFIX))/ChIA-PET2_$(VNUM))
 	if [ ! -d ${PREFIX} ]; then mkdir ${PREFIX}; fi
+	chmod +x ${BIN}/ChIA-PET2
 	cp -ri $(MK_PATH) $(PREFIX)/ChIA-PET2_$(VNUM)
 endif
 	@echo "Install ChIA-PET2 in $(realpath $(PREFIX))/ChIA-PET2_$(VNUM) ..."
