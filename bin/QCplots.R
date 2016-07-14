@@ -1,5 +1,7 @@
 require(ggplot2)
 require(scales)
+##require(cowplot)
+
 ## input parameters
 args<-commandArgs(TRUE)
 
@@ -79,7 +81,7 @@ QCplotA <-function(trimstatfile){
   figa <- figa +geom_text(aes(x=x, y=labelpos, label=sprintf("%1.2f%%", label)),fontface="bold", size=2.5)+
     ylab("PET Count (Millions)")+xlab(NULL)+
     ggtitle("Linker Trimming")+
-    scale_fill_manual(values=c("lightskyblue3",  "lightblue2","mediumpurple2", "gray","mediumpurple3" ))
+    scale_fill_manual(breaks=c("Chimeric","2Empty","1Empty","Both","Valid"),values=c("lightskyblue3",  "lightblue2","mediumpurple1", "gray","mediumpurple3" ))
 }
 
 #                V1      V2
@@ -119,7 +121,7 @@ QCplotB <-function(statfile){
     geom_bar(stat="identity")
   figb <- figb +geom_text(aes(x=x, y=labelpos, label=sprintf("%1.2f%%", label)),fontface="bold", size=2.5)+
     ylab("Count (Millions)")+xlab(NULL)+
-    ggtitle("Read Alignment")+scale_fill_brewer(palette=1)
+    ggtitle("Read Alignment")+scale_fill_brewer(palette=1,breaks=c("Unmapped","Low MAPQ","High MAPQ","Duplicates","Deduplicated"))
   figb
 }
 
@@ -145,7 +147,7 @@ QCplotC <-function(statfile){
   sams=read.table(statfile,sep="\t")
   if (dim(sams)[1]<14) {stop("Input file has not enough rows")}
   samsNs = sams$V2/1000000
-  type = c("Intra","Inter", "OneEndMapped",  "Intra_BetweenPeaks","Inter_BetweenPeaks","InSamePeak","Others")
+  type = c("Intra_Chrom","Inter_Chrom", "OneEndMapped",  "Intra_BetweenPeaks","Inter_BetweenPeaks","InSamePeak","Others")
   x = c( rep("All",3), rep("Filted",4) )
   count = c(samsNs[9], samsNs[10], samsNs[11],
             samsNs[13], samsNs[14], samsNs[12], samsNs[9]+samsNs[10]-sum(samsNs[12:14]))
@@ -161,7 +163,7 @@ QCplotC <-function(statfile){
   figc <- ggplot(df,aes(x=x,y=count,fill=type))+geom_bar(stat="identity")
   figc <- figc +geom_text(aes(x=x, y=labelpos, label=sprintf("%1.2f%%", label)),fontface="bold", size=2.5)+
     ylab("Count (Millions)")+xlab(NULL)+ggtitle("Read Pairs")
-  figc+scale_fill_manual(values=cbPalette[1:7])
+  figc+scale_fill_manual(values=cbPalette[1:7],breaks=c("OneEndMapped","Inter_Chrom","Intra_Chrom","Others","InSamePeak","Inter_BetweenPeaks","Intra_BetweenPeaks"))
 }
 
 
@@ -242,8 +244,10 @@ figB <- QCplotB(paste(prefix,'.bedpe.stat', sep=''))
 figC <- QCplotC(paste(prefix,'.bedpe.stat', sep=''))
 
 
-pdf(pdfout, width=8,height=9)
+##pp <- plot_grid(figA,figB, figC,figD1b, figD2, figD3, labels = c("A","B","C","D","E","F"), ncol=2,label_size = 12)
+pdf(pdfout, width=7.5,height=8)
 multiplot(figA,figB, figC,figD1b, figD2, figD3, layout=matrix(c(1,2,3,4,5,6), ncol = 2, byrow = TRUE))
+##pp
 dev.off()
 #bedpef1 = "ctcf2.interactions.intra.bedpe"
 #bedpef2 = "ctcf2.interactions.intra.bedpe"
