@@ -20,12 +20,12 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9","#009E73", "mediumpurple3","#F0E4
 
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   library(grid)
-  
+
   # Make a list from the ... arguments and plotlist
   plots <- c(list(...), plotlist)
-  
+
   numPlots = length(plots)
-  
+
   # If layout is NULL, then use 'cols' to determine layout
   if (is.null(layout)) {
     # Make the panel
@@ -34,20 +34,20 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
                      ncol = cols, nrow = ceiling(numPlots/cols))
   }
-  
+
   if (numPlots==1) {
     print(plots[[1]])
-    
+
   } else {
     # Set up the page
     grid.newpage()
     pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-    
+
     # Make each plot, in the correct location
     for (i in 1:numPlots) {
       # Get the i,j matrix positions of the regions that contain this subplot
       matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-      
+
       print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
                                       layout.pos.col = matchidx$col))
     }
@@ -69,8 +69,8 @@ QCplotA <-function(trimstatfile){
   x = c(rep("All",4), "Valid")
   count = c(trim$V2[3], trim$V2[5], trim$V2[6], trim$V2[4], trim$V2[7])
   trimdf <- data.frame(type,x,count)
-  
-  trimdf$labelpos <- c(trimdf$count[1]/2, 
+
+  trimdf$labelpos <- c(trimdf$count[1]/2,
                        sum(trimdf$count[1:2])-trimdf$count[2]/2,
                        sum(trimdf$count[1:3])-trimdf$count[3]/2,
                        sum(trimdf$count[1:4])-trimdf$count[4]/2,
@@ -106,17 +106,17 @@ QCplotB <-function(statfile){
   count = c(samsNs[1]-samsNs[2]-samsNs[3], samsNs[2], samsNs[3],
             samsNs[1]-samsNs[4]-samsNs[5], samsNs[4], samsNs[5],
             samsNs[8], samsNs[7])
-  
+
   df <- data.frame(type,x,count)
-  
+
   df$labelpos <- c( count[1]/2, count[1]+count[2]/2, count[1]+count[2]+count[3]/2,
                     count[4]/2, count[4]+count[5]/2, count[4]+count[5]+count[6]/2,
                     count[7]/2, count[7]+count[8]/2)
-  
+
   df$label <- c( count[1:6]/samsNs[1], count[7:8]/samsNs[6] )*100
   df$x <- as.character(df$x)
   df$x <- factor(df$x, levels=unique(df$x))
-  
+
   figb <- ggplot(df,aes(x=x,y=count,fill=type))+
     geom_bar(stat="identity")
   figb <- figb +geom_text(aes(x=x, y=labelpos, label=sprintf("%1.2f%%", label)),fontface="bold", size=2.5)+
@@ -148,18 +148,18 @@ QCplotC <-function(statfile){
   if (dim(sams)[1]<14) {stop("Input file has not enough rows")}
   samsNs = sams$V2/1000000
   type = c("Intra_Chrom","Inter_Chrom", "OneEndMapped",  "Intra_BetweenPeaks","Inter_BetweenPeaks","InSamePeak","Others")
-  x = c( rep("All",3), rep("Filted",4) )
+  x = c( rep("All",3), rep("Filtered",4) )
   count = c(samsNs[9], samsNs[10], samsNs[11],
             samsNs[13], samsNs[14], samsNs[12], samsNs[9]+samsNs[10]-sum(samsNs[12:14]))
-  
-  df <- data.frame(type,x,count)  
+
+  df <- data.frame(type,x,count)
   df$labelpos <- c( count[1]/2, count[1]+count[2]/2, count[1]+count[2]+count[3]/2,
                     count[4]/2, count[4]+count[5]/2, count[4]+count[5]+count[6]/2, sum(count[4:6])+count[7]/2 )
-  
+
   df$label <- c( count[1:3]/samsNs[8], count[4:7]/sum(count[4:7]) )*100
   df$x <- as.character(df$x)
   df$x <- factor(df$x, levels=unique(df$x))
-  
+
   figc <- ggplot(df,aes(x=x,y=count,fill=type))+geom_bar(stat="identity")
   figc <- figc +geom_text(aes(x=x, y=labelpos, label=sprintf("%1.2f%%", label)),fontface="bold", size=2.5)+
     ylab("Count (Millions)")+xlab(NULL)+ggtitle("Read Pairs")
@@ -168,7 +168,7 @@ QCplotC <-function(statfile){
 
 
 #####
-#QCplotD 
+#QCplotD
 # args[1]: directory
 # args[2]: name
 prefix = paste(args[1],"/",args[2], sep='')
