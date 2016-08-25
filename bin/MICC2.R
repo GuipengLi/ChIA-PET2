@@ -9,7 +9,7 @@ ZetaTruncated <- function(theta, max=Default.Max, Truncated=FALSE){
 	if( Truncated ) {
 		x <- c(1:max)
 		theta.len <- length(theta)
-		if(theta.len>1) { 
+		if(theta.len>1) {
 			i <- 1
 			v <- rep( 0, theta.len )
 			while( i<=max ) {
@@ -30,7 +30,7 @@ D1.ZetaTruncated <- function(theta, max=Default.Max, Truncated=FALSE){
 	if( Truncated ) {
 		x <- c(1:max)
 		theta.len <- length(theta)
-		if(theta.len>1) { 
+		if(theta.len>1) {
 			i <- 1
 			v <- rep( 0, theta.len )
 			while( i<=max ) {
@@ -73,7 +73,7 @@ Theta1 <- function(distance, params=params) {
 	#v[ distance.finite ] <- (par1*par2*distance[distance.finite] + 1) / (par2*distance[distance.finite] + 1)
 	par.fdconstance <- 1000
 	pd <- -par2*distance[distance.finite]
-	v[distance.finite] <- (par1 * distance[distance.finite] + par3*par2*par.fdconstance) / ( par2*par.fdconstance + distance[distance.finite] ) + par4 / (10*distance[distance.finite]) 
+	v[distance.finite] <- (par1 * distance[distance.finite] + par3*par2*par.fdconstance) / ( par2*par.fdconstance + distance[distance.finite] ) + par4 / (10*distance[distance.finite])
 	v
 }
 D1.Theta1.params <- function(params, distance=distance) {
@@ -108,7 +108,7 @@ rF1 <- function(n, theta=theta, max=max, Truncated=FALSE){
 	while( UnFinished.label ) {
 		pF <- 1/zeta.theta[UnFinished] * x^-theta[UnFinished]
 		cumF.unfinished <- cumF[UnFinished]
-		u0.unfinished <- u0[UnFinished]		
+		u0.unfinished <- u0[UnFinished]
 		r0.unfinished <- r0[UnFinished]
 		UnFinished.unfinished <- UnFinished[UnFinished]
 		cumF.unfinished <- cumF.unfinished + pF
@@ -174,7 +174,7 @@ rF2 <- function(n, theta=theta, max=max, Truncated=FALSE){
 	while( UnFinished.label ) {
 		pF <- 1/zeta.theta[UnFinished] * x^-theta[UnFinished]
 		cumF.unfinished <- cumF[UnFinished]
-		u0.unfinished <- u0[UnFinished]		
+		u0.unfinished <- u0[UnFinished]
 		r0.unfinished <- r0[UnFinished]
 		UnFinished.unfinished <- UnFinished[UnFinished]
 		cumF.unfinished <- cumF.unfinished + pF
@@ -217,7 +217,7 @@ rF3 <- function(n, cA=cA, cB=cB, N=N){
 		pF <- dhyper( x, cA, 2*N-cA, cB, log=TRUE )
 		pF <- exp(pF-log(1-p0))
 		cumF.unfinished <- cumF[UnFinished]
-		u0.unfinished <- u0[UnFinished]		
+		u0.unfinished <- u0[UnFinished]
 		r0.unfinished <- r0[UnFinished]
 		UnFinished.unfinished <- UnFinished[UnFinished]
 		cumF.unfinished <- cumF.unfinished + pF[UnFinished]
@@ -270,7 +270,7 @@ D1.PriorDistance.params <- function(params, distance=distance) {
 	lambda <- matrix( lambda, 3, distance.len )
 	lambda <- t(lambda)
 	v <- exp( par1 * ld[distance.finite] + par2 )
-	lambda[ distance.finite, ] <- c( lambda0 * ld[distance.finite] * v / ( 1 + v )^2, 
+	lambda[ distance.finite, ] <- c( lambda0 * ld[distance.finite] * v / ( 1 + v )^2,
 					lambda0 * v / ( 1 + v )^2,
 					v / ( 1 + v ) )
 	lambda
@@ -281,7 +281,7 @@ PriorcAcB <- function(cA, cB, params=params, Minus=FALSE) {
 	lcB <- log(cB)
 	par1 <- params[1]
 	par2 <- params[2]
-	v1 <- exp( par1 * lcA + par2 ) 
+	v1 <- exp( par1 * lcA + par2 )
 	v2 <- exp( par1 * lcB + par2 )
 	if(!Minus) {
 		mu <- 1 - v1 * v2 / ((1+v1)*(1+v2))
@@ -297,7 +297,7 @@ LogPriorcAcB <- function(cA, cB, params=params) {
 	lcB <- log(cB)
 	par1 <- params[1]
 	par2 <- params[2]
-	v1 <- exp( par1 * lcA + par2 ) 
+	v1 <- exp( par1 * lcA + par2 )
 	v2 <- exp( par1 * lcB + par2 )
 	mu <- log( 1 + v1 + v2 ) - log( 1 + v1 ) - log( 1 + v2 )
 	#mu[mu==0] <- -1e-16
@@ -308,7 +308,7 @@ D1.PriorcAcB.params <- function(params, cA=cA, cB=cB) {
 	lcB <- log(cB)
 	par1 <- params[1]
 	par2 <- params[2]
-	v1 <- exp( par1 * lcA + par2 ) 
+	v1 <- exp( par1 * lcA + par2 )
 	v2 <- exp( par1 * lcB + par2 )
 	D1.v1.par1 <- lcA * v1
 	D1.v1.par2 <- v1
@@ -380,7 +380,7 @@ D1.Loglik.theta12.params <- function(params, cAB=cAB, label=label, distance=dist
 
 Loglik.PriorDistance.params <- function(params, label=label, distance=distance) {
 	lambda <- PriorDistance( distance, params )
-	D <- label[,1] * log(1-lambda) 
+	D <- label[,1] * log(1-lambda)
 	D <- D + label[,2] * log(1-lambda)
 	D <- D + label[,3] * log(lambda)
 	-sum(D)
@@ -389,17 +389,17 @@ D1.Loglik.PriorDistance.params <- function(params, label=label, distance=distanc
 	Dif1.PriorDistance.params <- D1.PriorDistance.params( params, distance )
 	lambda <- PriorDistance( distance, params )
 	#
-	D <- -label[,1] / (1-lambda) 
+	D <- -label[,1] / (1-lambda)
 	D <- D - label[,2] / (1-lambda)
 	D <- D + label[,3] / lambda
 	Dif1 <- sum(D * Dif1.PriorDistance.params[,1])
 	#
-	D <- -label[,1] / (1-lambda) 
+	D <- -label[,1] / (1-lambda)
 	D <- D - label[,2] / (1-lambda)
 	D <- D + label[,3] / lambda
 	Dif2 <- sum(D * Dif1.PriorDistance.params[,2])
 	#
-	D <- -label[,1] / (1-lambda) 
+	D <- -label[,1] / (1-lambda)
 	D <- D - label[,2] / (1-lambda)
 	D <- D + label[,3] / lambda
 	Dif3 <- sum(D * Dif1.PriorDistance.params[,3])
@@ -409,7 +409,7 @@ D1.Loglik.PriorDistance.params <- function(params, label=label, distance=distanc
 Loglik.PriorcAcB.params <- function(params, label=label, cA=cA, cB=cB) {
 	lambda <- PriorcAcB( cA, cB, params)
 	mlambda <- PriorcAcB( cA, cB, params, Minus=TRUE)
-	D <- label[,1] * log(mlambda) 
+	D <- label[,1] * log(mlambda)
 	D <- D + label[,2] * log(lambda)
 	-sum(D)
 }
@@ -504,7 +504,7 @@ CompAllLogProb <- function( cAB, distance, cA, cB, params ) {
 	Loglambda.v <- LogPriorDistance(distance, lambda)
 	Logmu.v <- LogPriorcAcB(cA, cB, mu)
 	LogProb <- list( LogF1.v=LogF1.v, LogF2.v=LogF2.v, LogF3.v=LogF3.v, Loglambda.v=Loglambda.v, Logmu.v=Logmu.v )
-}		
+}
 CompLoglik <- function( LogProb ) {
 	LogF1.v <- LogProb$LogF1.v
 	LogF2.v <- LogProb$LogF2.v
@@ -521,27 +521,27 @@ CompLoglik <- function( LogProb ) {
 	Logmmu.v <- log( 1 - mu.v )
 	verysmall <- which(Logmmu.v== -Inf)
 	Logmmu.v[verysmall] <- log( -Logmu.v[verysmall] ) + log( 1 + Logmu.v[verysmall]/2 )
-	
+
 	LogProb1 <- Logmmu.v + log( 1 - lambda.v ) + LogProb$LogF1.v
 	LogProb2 <- Logmu.v + log( 1 - lambda.v ) + LogProb$LogF2.v
 	LogProb3 <- LogProb$Loglambda.v + LogProb$LogF3.v
 	#
 	LogLik <- LogProb1
 	LogLik <- LogLik + log( 1 + exp( LogProb2-LogProb1 ) + exp( LogProb3-LogProb1 ) )
-	# 
+	#
 	PostProb1 <- exp(LogProb1 - LogLik)
 	PostProb2 <- exp(LogProb2 - LogLik)
 	PostProb3 <- exp(LogProb3 - LogLik)
 	v <- list( LogLik=sum(LogLik), PostProb=cbind( PostProb1, PostProb2, PostProb3 ) )
 	v
-}	
+}
 
 EMIter <- function( data, params.init=NULL, reltol=1e-5, abstol=1e-3, step=200, restart=5, MinConfident=5 ) {
 	cAB <- data$cAB
 	distance <- data$distance
 	cA <- data$cA
 	cB <- data$cB
-	
+
 	# parameter initialization
 	if(is.null(params.init)) {
 		theta12.par <- Estimate.Theta12.params(cAB, distance)
@@ -549,7 +549,7 @@ EMIter <- function( data, params.init=NULL, reltol=1e-5, abstol=1e-3, step=200, 
 		mu.par <- Estimate.PriorcAcB.params(cAB, distance, cA, cB)
 		params.init <- list( theta12.par=theta12.par$par, lambda.par=lambda.par, mu.par=mu.par )
 	}
-	
+
 	CONVERGE <- 0
 	RELCONVERGE <- 0
 	num.restart <- 1
@@ -599,15 +599,15 @@ EMIter <- function( data, params.init=NULL, reltol=1e-5, abstol=1e-3, step=200, 
 		cat( "MICC CONVERGED!\n" );
 	}
 	else if( RELCONVERGE==1 ) {
-		cat( "MICC RELCONVERGED!\n" );
+		cat( "MICC RELATIVELY CONVERGED!\n" );
 	}
 	else {
 		cat( "MICC NOT CONVERGED!\n" );
 	}
 	results <- list( params=params, LogLik=LogLik, PostProb=label )
 }
-		
-#===================================================		
+
+#===================================================
 # estimate FDR
 rMyMultinom <- function( n, p ) {
 	u0 <- runif(n, 0, 1)
@@ -620,7 +620,7 @@ rMyMultinom <- function( n, p ) {
 	while( UnFinished.label ) {
 		pF <- p[UnFinished,x]
 		cumF.unfinished <- cumF[UnFinished]
-		u0.unfinished <- u0[UnFinished]		
+		u0.unfinished <- u0[UnFinished]
 		r0.unfinished <- r0[UnFinished]
 		UnFinished.unfinished <- UnFinished[UnFinished]
 		cumF.unfinished <- cumF.unfinished + pF
@@ -677,14 +677,14 @@ rMICC <- function( data, params ) {
 	r[label==2] <- r2
 	r[label==3] <- r3
 	list( r=r, label=label )
-}	
+}
 
 FDRestimate <- function( data, params, PostProb ) {
 	rnd <- rMICC( data, params )
 	cA <- data$cA
 	cB <- data$cB
 	cAB <- rnd$r
-	
+
 	label <- rnd$label
 	distance <- data$distance
 	LogProb <- CompAllLogProb( cAB, distance, cA, cB, params )
@@ -700,7 +700,7 @@ FDRestimate <- function( data, params, PostProb ) {
 		breaks <- c(t1, breaks)
 	}
 	t1 <- max(PostProb,rndPostProb)+0.01
-	breaks <- c(breaks,t1) 
+	breaks <- c(breaks,t1)
 	PostProb.breaks <- hist(PostProb, breaks, plot=FALSE)$counts
 	rndPostProb.true.breaks <- hist(rndPostProb[label==1], breaks, plot=FALSE)$counts
 	rndPostProb.false.breaks <- hist(rndPostProb[label!=1], breaks, plot=FALSE)$counts
@@ -722,7 +722,7 @@ FDRestimate <- function( data, params, PostProb ) {
 ###########            InputMatrixFormatted: process input PET clusters into MICC main model input
 ###########            MICCMainLearn: fit model parameters
 ###########            FDRcompute: compute FDR
-###########			   MICCoutput: implement MICC model and get output 
+###########			   MICCoutput: implement MICC model and get output
 ###########################################################################################
 ####=============================================================================
 
@@ -801,7 +801,7 @@ cutoff=1
 MinConfident=5
 if (argslen<3) {
   stop("At least 3 arguments must be supplied (input, output).", call.=FALSE)
-}else if (argslen>=3){ 
+}else if (argslen>=3){
 	inputbedpe1<-args[1]
 	inputbedpe2<-args[2]
 	outputbedpe<-args[3]
