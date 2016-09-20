@@ -71,11 +71,12 @@ Notes
 
 - Suppose the bridge linker is:
 
+        5'end ->
         ACGCGATATCTTATCTGACT
         TGCGCTATAGAATAGACTGA
+                    <- 5'end
 
-
-We could set the first N, e.g. 15, bases of both ends as the parameters: "-A ACGCGATATCTTATC -B AGTCAGATAAGATAT"
+We could set the first N, e.g. 15, bases of both ends (from 5' to 3') as the parameters: "-A ACGCGATATCTTATC -B AGTCAGATAAGATAT"
 
 - The genome  size file (bedtoolsgenome) should be **tab delimited** and structured as follows:
 
