@@ -180,7 +180,8 @@ Citation
 
 Please cite the following article if you use ChIA-PET2 in your research:
 
-- Li GP, Chen Y, Snyder MP, Zhang MQ: ChIA-PET2: an versatile and flexible pipeline for ChIA-PET data analysis (submitted)
+- Li, G., Chen, Y., Snyder, M.P. and Zhang, M.Q. (2016) ChIA-PET2: a versatile and flexible pipeline for ChIA-PET data analysis. Nucleic acids research. doi:10.1093/nar/gkw809
+
 
 If you use MICC to call significant chromatin loops (step 7 in the pipeline), please cite the following:
 
