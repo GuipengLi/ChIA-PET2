@@ -72,12 +72,13 @@ Notes
 - Suppose the bridge linker is:
 
 ACGCGATATCTTATCTGACT
+
 TGCGCTATAGAATAGACTGA
 
 We could set the first N, e.g. 15, bases of both ends as the parameters: "-A ACGCGATATCTTATC -B AGTCAGATAAGATAT"
 
 - The genome  size file (bedtoolsgenome) should tab delimited and structured as follows:
-         <chromName><TAB><chromSize>
+         chromName<TAB>chromSize
 
         For example, Human (hg19):
         chr1  249250621
