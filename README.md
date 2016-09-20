@@ -71,19 +71,19 @@ Notes
 
 - Suppose the bridge linker is:
 
-ACGCGATATCTTATCTGACT
+    ACGCGATATCTTATCTGACT
+    TGCGCTATAGAATAGACTGA
 
-TGCGCTATAGAATAGACTGA
 
 We could set the first N, e.g. 15, bases of both ends as the parameters: "-A ACGCGATATCTTATC -B AGTCAGATAAGATAT"
 
 - The genome  size file (bedtoolsgenome) should be **tab delimited** and structured as follows:
 
-        For example, Human (hg19):
-        chr1  249250621
-        chr2  243199373
-        ...
-        chrM  16571
+    For example, Human (hg19):
+    chr1  249250621
+    chr2  243199373
+    ...
+    chrM  16571
 
 
 Output
