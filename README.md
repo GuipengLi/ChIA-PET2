@@ -139,9 +139,9 @@ Toolkit
     $ buldBedpe file1.sam file2.sam output  MAPQ_cutoff thread keepseq_flag
 
 
-**removeDup:** remove duplicate PETs
+**removeDup:** remove duplicate PETs with N threads
 
-    $ removeDup in.bedpe out.bedpe
+    $ removeDup in.bedpe out.bedpe N
 
 
 **buildTagAlign:** build tag file from bedpe file for MACS2 input.

@@ -8,7 +8,7 @@ using namespace std;
 /*funcion that show the help information*/
 void usage(char *s)
 {
-  cout<<"Usage:   "<<s<<" bedpein bedpeout"<<endl;
+  cout<<"Usage:   "<<s<<" bedpein bedpeout N_thread"<<endl;
 }
 
 
@@ -24,7 +24,7 @@ int main (int argc,char *argv[])
     usage(argv[0]);
     exit(1);
   }
-  /*use function getopt to get the arguments with option."hu:p:s:v" indicate 
+  /*use function getopt to get the arguments with option."hu:p:s:v" indicate
   that option h,v are the options without arguments while u,p,s are the
   options with arguments*/
   if (argc == 4) {
@@ -39,7 +39,7 @@ int main (int argc,char *argv[])
 
   //start
   cout <<"Running removeDups..."<<endl;
-  removeDups(bedpein, outname,10000000,thread);  
+  removeDups(bedpein, outname,10000000,thread);
   return 0;
 }
 
