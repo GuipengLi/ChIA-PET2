@@ -57,7 +57,7 @@ Just type in **' ChIA-PET2 -h '** for detailed usage.
       -d|--short:     short reads (0 or 1), default=0
       -M|--macs2 parameters, default="-q 0.05"
       -Q|--mapq:      mapq cutoff, default=30
-      -C|--cutoffPET: PET count cutoff before running MICC, default=1
+      -C|--cutoffPET: PET count cutoff before running MICC, default=2
       -S|--slop:      slop length, default=100
       -E|--extend:    extend length on both sides, default=500
       -l|--length:    min length of reads after linker trimming. default=15
@@ -162,7 +162,7 @@ Toolkit
     $ Rscript QCplots.R directory name
 
 
-**MICC2.R:** Call MICC package to estimate the statistically significance of chromatin loops.
+**MICC2.R:** Call MICC package to estimate the statistically significance of chromatin loops. Default CUTOFFPET=2.
 
     $ Rscript MICC2.R interactions.intra.bedpe interactions.inter.bedpe miccOUT CUTOFFPET
 

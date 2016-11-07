@@ -1,11 +1,11 @@
 #!/bin/bash
 
-## ChIA-PET2           
+## ChIA-PET2
 ## Copyleft 2016 Guipeng Li
 ## Author: Guipeng Li
 ## Contact: guipeng.lee@gmail.com
 ## This software is distributed without any guarantee under the terms of the GNU General Public License, Version 3, June 2007.
-                                                                   
+
 SOFT="ChIA-PET2"
 VERSION="0.9.2"
 DATE="2016.04.19"
@@ -18,7 +18,7 @@ function usage {
 
 function help {
     usage;
-    echo 
+    echo
     echo "$SOFT $VERSION   $DATE"
     echo "----------------------------"
     echo "OPTIONS"
@@ -113,8 +113,8 @@ SLOPLEN=100
 EXTEND=500
 LINKER_A="GTTGGATAAG"
 LINKER_B="GTTGGAATGT"
-SL=0 
-CUTOFFPET=1
+SL=0
+CUTOFFPET=2
 
 while getopts "s:b:g:m:e:k:M:Q:C:S:E:l:A:B:o:n:t:f:r:d:P:vh" OPT
 do
@@ -213,7 +213,7 @@ if [ $START -le 3 ]; then
 		cmd="buildBedpe ${fname}_1.valid.sam ${fname}_2.valid.sam  ${fname}.bedpe $MAPQ $THREAD"
 		if [ ! -s $PHASE ]; then
 			cmd="buildBedpe ${fname}_1.valid.sam ${fname}_2.valid.sam  ${fname}.bedpe $MAPQ $THREAD 1"
-		fi	
+		fi
 		exec_cmd $cmd
 	else
  		die "Please check input or Rerun step 3"
@@ -300,6 +300,6 @@ if [[ -s $PHASE && $START -le 8 ]]; then
 	else
  		die "Please check input or Rerun step 8"
 	fi
-fi	
+fi
 
 echo -e "\n[`date +"%m-%d %T"`] Finish ChIA-PET2 Analysis.\n"
