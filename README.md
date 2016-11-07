@@ -143,7 +143,7 @@ Toolkit
 
 |chr |start|end  |chr |start |end  |name |score |strand1|strand2|
 |----|-----|-----|----|------|-----|------|------|------|------|
-|chr1|9128 |9228|chr1|89064 |89164|readpair1|peak_3|+   |-     |
+|chr1|9128 |9228|chr1|89064 |89164|readpair1|.|+   |-     |
 
 
 **buildTagAlign:** build tag file from bedpe file for MACS2 input.
