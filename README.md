@@ -141,6 +141,10 @@ Toolkit
 
 **removeDup:** remove duplicate PETs with N threads.
 
+|chr |start|end  |alelle1|allele2|
+|----|-----|-----|-------|-------|
+|chr1|19118|19119| A     | C     |
+
 |chr |start|end  |chr |start |end  |name  |score |strand1|strand2|
 |----|-----|-----|----|------|-----|----------|--|-------|-------|
 |chr1|9118 |9218 |chr1|89064 |89164|ReadPair1 |. | +     | -     |
