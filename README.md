@@ -146,6 +146,7 @@ Toolkit
 |chr1|9118 |9218 |chr1|89064 |89164|ReadPair1 |. | +     | -     |
 
 
+
 **buildTagAlign:** build tag file from bedpe file for MACS2 input.
 
     $ buildTagAlign in.bedpe out.tag.bed
