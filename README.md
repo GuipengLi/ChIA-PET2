@@ -139,12 +139,14 @@ Toolkit
     $ buldBedpe file1.sam file2.sam output  MAPQ_cutoff thread keepseq_flag
 
 
-**removeDup:** remove duplicate PETs with N threads. The bedpe file containing the paired-end tags (PETs) is in the following format.
+**removeDup:** remove duplicate PETs with N threads.
 
 |chr |start|end  |chr |start |end  |name  |score |strand1|strand2|
 |----|-----|-----|----|------|-----|----------|--|-------|-------|
 |chr1|9118 |9218 |chr1|89064 |89164|ReadPair1 |. | +     | -     |
 
+
+The bedpe file containing the paired-end tags (PETs) is in the above format.
 
 
 **buildTagAlign:** build tag file from bedpe file for MACS2 input.
