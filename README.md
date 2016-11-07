@@ -143,7 +143,7 @@ Toolkit
 
 |chr |start|end  |chr |start |end  |name  |score |strand1|strand2|
 |----|-----|-----|----|------|-----|----------|--|-------|-------|
-|chr1|9118 |9218 |chr1|89064 |89164|ReadPair_1|. | +     | -     |
+|chr1|9118 |9218 |chr1|89064 |89164|ReadPair1 |. | +     | -     |
 
 
     $ removeDup in.bedpe out.bedpe N
