@@ -39,7 +39,7 @@ function help {
     echo "   -d|--short : short reads (0 or 1), default=0"
     echo "   -M|--macs2 parameters, default=\"-q 0.05\""
     echo "   -Q|--mapq : mapq cutoff, default=30"
-    echo "   -C|--cutoffPET : PET count cutoff before running MICC, default=1"
+    echo "   -C|--cutoffPET : PET count cutoff before running MICC, default=2"
     echo "   -S|--slop : slop length, default=100"
     echo "   -E|--extend : extend length on both sides, default=500"
     echo "   -l|--length : min length of reads after linker trimming. default=15"
