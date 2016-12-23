@@ -211,7 +211,7 @@ if [ $START -le 3 ]; then
 	echo -e "\n[`date +"%m-%d %T"`] Running Step 3: Build Bedpe ...\n"
 	if [[ -s ${fname}_1.valid.sam && -s ${fname}_2.valid.sam ]]; then
 		cmd="buildBedpe ${fname}_1.valid.sam ${fname}_2.valid.sam  ${fname}.bedpe $MAPQ $THREAD"
-		if [ ! -s $PHASE ]; then
+		if [ -s $PHASE ]; then
 			cmd="buildBedpe ${fname}_1.valid.sam ${fname}_2.valid.sam  ${fname}.bedpe $MAPQ $THREAD 1"
 		fi
 		exec_cmd $cmd
