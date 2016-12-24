@@ -184,6 +184,12 @@ Toolkit
     $ bedpe2Phased bedpe.flt.bed outputprefix
 
 
+**Generate a coverage track:** We can transform the demo.bedpe.tag.sorted file to bigwig format to get a coverage track, which could be visualized by IGV or UCSC genome browser.
+
+    $ bedtools genomecov -i demo.bedpe.tag.sorted -bg -g chrom_hg19.sizes > demo.bedpe.tag.sorted.bedgraph
+    $ bedGraphToBigWig demo.bedpe.tag.sorted.bedgraph chrom_hg19.sizes demo.bedpe.tag.sorted.bigwig
+
+
 Citation
 --------
 
