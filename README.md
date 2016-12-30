@@ -54,7 +54,7 @@ Just type in **' ChIA-PET2 -h '** for detailed usage.
       -e|--err:       Maximum mismatches allowed in linker sequence, default=0
       -k|--keepempty: 0,1,2; 0:No linker-empty reads; 1:keep 1 linker-empty read; 2:keep 2 linker-empty reads. default=0
       -t|--thread:    threads to run, default=1
-      -d|--short:     short reads (0 or 1), default=0
+      -d|--short:     short reads (0 or 1), default=0 for reads <70bp.
       -M|--macs2 parameters, default="-q 0.05"
       -Q|--mapq:      mapq cutoff, default=30
       -C|--cutoffPET: PET count cutoff before running MICC, default=2
