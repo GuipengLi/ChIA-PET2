@@ -22,6 +22,7 @@ To install ChIA-PET2:
 
     tar -zxvf ChIA-PET2.tar.gz
     cd ChIA-PET2
+    chmod +x bin/ChIA-PET2
     make
 
 ChIA-PET2 will be installed in the bin directory in user home (~/bin) by default. It's recommended to set the ~/bin directory to the PATH.
