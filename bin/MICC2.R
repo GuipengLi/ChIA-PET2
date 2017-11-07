@@ -588,7 +588,8 @@ EMIter <- function( data, params.init=NULL, reltol=1e-5, abstol=1e-3, step=200, 
 				oldparams <- params
 				oldLogLik <- LogLik
 			}
-			#cat( date(), "step=", num.step, " || absdiff=", absdiff, " || reldiff=", reldiff, "\n" )
+			## for bug fix
+			cat( date(), "step=", num.step, " || absdiff=", absdiff, " || reldiff=", reldiff, "\n" )
 			#cat( params$lambda.par, " || ", params$mu.par, "\n" )
 			#cat( params$theta12.par, "\n" )
 			num.step <- num.step + 1
@@ -754,20 +755,23 @@ MICCoutput <- function( data, outfilename, params.init=NULL, reltol=1e-5, abstol
 	Par <- MICCMainLearn( data_formatted, params.init=params.init, reltol=reltol, abstol=abstol, step=step, restart=restart, MinConfident=MinConfident )
 	params <- Par$params
 	PostProb <- Par$PostProb
+        cat('Calculating FDR... \n')
 	fdr <- FDRcompute( data_formatted, params, PostProb[,1] )
 	output.colnames <- c("chr.", "start", "end", "chr.", "start", "end", "cAB", "cA", "cB", "-log10(1-PostProb)", "fdr")
 	y <- cbind(data, -log10(1-PostProb[,1]), fdr)
 	colnames(y) <- output.colnames
+        cat('Writing to file... \n')
 	write.table( y, file=outfilename, sep="\t", row.names=F, quote=F )
 }
 
-InputMatrixFormatted2 <- function(data, cutoff=1) { ## by Guipeng Li, for ChIA-PET2
+InputMatrixFormatted2 <- function(data, cutoff=2) { ## by Guipeng Li, for ChIA-PET2
 	x <- subset(data,V11>=cutoff)
 	cAB <- x[,11]
 	cA <- x[,9]
 	cB <- x[,10]
 	intra <- as.character(x[,1])==as.character(x[,4])
 	inter <- as.character(x[,1])!=as.character(x[,4])
+        cat('Intra: ', sum(intra), "\tInter:", sum(inter),'\n' )
 	distance <- (x[,5]+x[,6]-x[,3]-x[,2]) / 2 / 1000
 	#distance[inter] <- 1E10
 	distance[inter] <- Inf
@@ -775,15 +779,17 @@ InputMatrixFormatted2 <- function(data, cutoff=1) { ## by Guipeng Li, for ChIA-P
 }
 
 ## by Guipeng Li, for ChIA-PET2
-MICCoutput2 <- function( data, outfilename, params.init=NULL, reltol=1e-5, abstol=1e-3, step=200, restart=5, MinConfident=5, cutoff=1) {
+MICCoutput2 <- function( data, outfilename, params.init=NULL, reltol=1e-5, abstol=1e-3, step=200, restart=5, MinConfident=5, cutoff=2) {
 	data_formatted <- InputMatrixFormatted2(data,cutoff)
 	Par <- MICCMainLearn( data_formatted, params.init=params.init, reltol=reltol, abstol=abstol, step=step, restart=restart, MinConfident=MinConfident )
 	params <- Par$params
 	PostProb <- Par$PostProb
+        cat('Calculating FDR... \n')
 	fdr <- FDRcompute( data_formatted, params, PostProb[,1] )
 	output.colnames <- c("chr", "start", "end", "chr", "start", "end", "peakA","peakB","cA", "cB","cAB", "-log10(1-PostProb)", "fdr")
-	y <- cbind(data, -log10(1-PostProb[,1]), fdr)
+	y <- cbind(subset(data,V11>=cutoff), -log10(1-PostProb[,1]), fdr)
 	colnames(y) <- output.colnames
+        cat('Writing to file... \n')
 	write.table( y, file=outfilename, sep="\t", row.names=F, quote=F )
 }
 
@@ -793,11 +799,11 @@ argslen=length(args)
 inputbedpe1="input1"
 inputbedpe2="input2"
 outputbedpe="output.MICC"
-reltol=1e-5
-abstol=1e-3
-step=300
+reltol=1e-8
+abstol=1e-4
+step=100
 restart=10
-cutoff=1
+cutoff=2
 MinConfident=5
 if (argslen<3) {
   stop("At least 3 arguments must be supplied (input, output).", call.=FALSE)
@@ -808,19 +814,26 @@ if (argslen<3) {
 }else if (argslen==4){
 	cutoff<-args[4]
 }else if (argslen==5){
-	reltol<-args[5]
+	MinConfident<-args[5]
 }else if (argslen==6){
-	abstol<-args[6]
+	reltol<-args[6]
 }else if (argslen==7){
 	step<-args[7]
 }else if (argslen==8){
 	restart<-args[8]
 }else if (argslen==9){
-	MinConfident<-args[9]
+	abstol<-args[9]
 }else{
   stop("Too many arguments supplied.", call.=FALSE)
 }
 cat("Running MICC...\n")
+cat('Intra data: ', inputbedpe1,'\n')
+cat('Inter data: ', inputbedpe2,'\n')
+cat('Output file: ', outputbedpe,'\n')
+cat('PET count cutoff: ', cutoff,'\n')
+cat('Minimun Confident PET count: ', MinConfident,'\n')
+cat('reltol: ', reltol,'\n')
+
 cat("Loading intra data...\n")
 dat1=read.table(inputbedpe1,head=F)
 cat("Loading inter data...\n")

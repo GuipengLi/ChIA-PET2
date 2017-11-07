@@ -37,7 +37,7 @@ Just type in **' ChIA-PET2 -h '** for detailed usage.
     usage : ChIA-PET2 -g genomeindex -b bedtoolsgenome -f fq1 -r fq2 -A linkerA -B linkerB -o OUTdir -n prefixname
     Use option -h|--help for more information
 
-    ChIA-PET2 0.9.2   2016.04.19
+    ChIA-PET2 0.9.3   2017.11.07
     ----------------------------
     OPTIONS
 
@@ -166,6 +166,8 @@ Toolkit
 **MICC2.R:** Call MICC package to estimate the statistically significance of chromatin loops. Default CUTOFFPET=2.
 
     $ Rscript MICC2.R interactions.intra.bedpe interactions.inter.bedpe miccOUT CUTOFFPET
+    Other parameters can be provided:
+    $ Rscript MICC2.R interactions.intra.bedpe interactions.inter.bedpe miccOUT 2 6 1e-10
 
 
 **bedpe2Matrix:** Generate the Hi-C style matrix. The output matrix is in triplet sparse format, which is compatible with HiCPlotter.
