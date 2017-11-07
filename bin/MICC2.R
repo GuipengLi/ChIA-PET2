@@ -811,19 +811,25 @@ if (argslen<3) {
 	inputbedpe1<-args[1]
 	inputbedpe2<-args[2]
 	outputbedpe<-args[3]
-}else if (argslen==4){
-	cutoff<-args[4]
-}else if (argslen==5){
-	MinConfident<-args[5]
-}else if (argslen==6){
-	reltol<-args[6]
-}else if (argslen==7){
-	step<-args[7]
-}else if (argslen==8){
-	restart<-args[8]
-}else if (argslen==9){
-	abstol<-args[9]
-}else{
+}
+if (argslen>=4){
+	cutoff<-as.numeric(args[4])
+}
+if (argslen>=5){
+	MinConfident<-as.numeric(args[5])
+}
+if (argslen>=6){
+	reltol<-as.numeric(args[6])
+}
+if (argslen>=7){
+	step<-as.numeric(args[7])
+}
+if (argslen>=8){
+	restart<-as.numeric(args[8])
+}
+if (argslen==9){
+	abstol<-as.numeric(args[9])
+}else if (argslen>9){
   stop("Too many arguments supplied.", call.=FALSE)
 }
 cat("Running MICC...\n")
