@@ -86,7 +86,7 @@ for arg in "$@"; do
       "--linkerA")   set -- "$@" "-A" ;;
       "--linkerB")   set -- "$@" "-B" ;;
       "--output")   set -- "$@" "-o" ;;
-      "--nmae")   set -- "$@" "-n" ;;
+      "--name")   set -- "$@" "-n" ;;
       "--thread")   set -- "$@" "-t" ;;
       "--forward")   set -- "$@" "-f" ;;
       "--reverse")   set -- "$@" "-r" ;;
