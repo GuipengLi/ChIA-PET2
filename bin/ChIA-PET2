@@ -72,6 +72,7 @@ fi
 for arg in "$@"; do
   shift
   case "$arg" in
+      "--start") set -- "$@" "-s" ;;
       "--genome") set -- "$@" "-g" ;;
       "--bedtoolsgenome") set -- "$@" "-b" ;;
       "--mode") set -- "$@" "-m" ;;
