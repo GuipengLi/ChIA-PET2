@@ -19,9 +19,8 @@ LDFLAGS= -lz
 SOURCES=$(MK_PATH)/src
 BIN=$(MK_PATH)/bin
 
-all : install
-
-install : trimLinker buildBedpe removeDup buildTagAlign tag2Depth bedpe2Interaction bedpe2Phased bedpe2Matrix cp
+all : trimLinker buildBedpe removeDup buildTagAlign tag2Depth bedpe2Interaction bedpe2Phased bedpe2Matrix
+install : cp
 
 
 ######################################
