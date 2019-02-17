@@ -126,7 +126,7 @@ Toolkit
          -t  threads
          -e  number of mismatch allowed in linker, default=0
          -k  keep empty: 0, 1, 2
-         -l  min length of timmed reads: default=15
+         -l  min length of trimmed reads: default=15
          -o  output directory
          -m  mode: 0 or 1, A/B linkers(0) or bridge linker(1)
          -A  linkerA
