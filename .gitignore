@@ -1,0 +1,8 @@
+bin/bedpe2Interaction
+bin/bedpe2Matrix
+bin/bedpe2Phased
+bin/buildBedpe
+bin/buildTagAlign
+bin/removeDup
+bin/tag2Depth
+bin/trimLinker
