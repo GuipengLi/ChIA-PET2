@@ -206,13 +206,13 @@ int parseFastqgz_p(int threadN,string fn1, string fn2,string basename, size_t mi
 	fp2 = gzopen(fn2.c_str(), "rb");
 	int n_seqs1 = 1;
 	long long linecount = 0;
-	int expectcount = 0;
-	int validcount = 0;
-	int chimcount = 0;
-	int ambicount = 0;
-	int ebothcount = 0;
-	int emptycount1 = 0;
-	int emptycount2 = 0;
+	long long expectcount = 0;
+	long long validcount = 0;
+	long long chimcount = 0;
+	long long ambicount = 0;
+	long long ebothcount = 0;
+	long long emptycount1 = 0;
+	long long emptycount2 = 0;
 	int chunk_line = 2000000;
 	vector<bseq1_t> seqs1;
 	vector<bseq1_t> seqs2;
@@ -374,14 +374,14 @@ int parseFastqBridgegz_p(int threadN,string fn1, string fn2,string basename, siz
 	fp2 = gzopen(fn2.c_str(), "rb");
 	int n_seqs1 = 1;
 	long long linecount = 0;
-	int expectcount = 0;
-	int validcount = 0;
-	int ebothcount = 0;
-	int chimcount = 0;
-	int ambicount = 0;
-	int emptycount1 = 0;
-	int emptycount2 = 0;
-	int chunk_line = 2000000;
+	long long expectcount = 0;
+	long long validcount = 0;
+	long long ebothcount = 0;
+	long long chimcount = 0;
+	long long ambicount = 0;
+	long long emptycount1 = 0;
+	long long emptycount2 = 0;
+	long long chunk_line = 2000000;
 	vector<bseq1_t> seqs1;
 	vector<bseq1_t> seqs2;
 	while(n_seqs1>0){
@@ -543,13 +543,13 @@ int parseFastqEnzymegz_p(int threadN,string fn1, string fn2,string basename, siz
 	fp2 = gzopen(fn2.c_str(), "rb");
 	int n_seqs1 = 1;
 	long long linecount = 0;
-	int expectcount = 0;
-	int ebothcount = 0;
-	int validcount = 0;
-	int chimcount = 0;
-	int ambicount = 0;
-	int emptycount1 = 0;
-	int emptycount2 = 0;
+	long long expectcount = 0;
+	long long ebothcount = 0;
+	long long validcount = 0;
+	long long chimcount = 0;
+	long long ambicount = 0;
+	long long emptycount1 = 0;
+	long long emptycount2 = 0;
 	int chunk_line = 2000000;
 	vector<bseq1_t> seqs1;
 	vector<bseq1_t> seqs2;
@@ -890,11 +890,11 @@ vector< int > parseFastqBridgegz(string fastqgz1, string fastqgz2,string basenam
     //ofstream chim2 ( (basename + "_2.chim.fastq").c_str() );
     
     // keep track of PET types
-    int samecount = 0;
-    int validcount = 0;
-    int chimcount = 0;
-    int ambicount = 0;
-    int emptycount = 0;
+    long long samecount = 0;
+    long long validcount = 0;
+    long long chimcount = 0;
+    long long ambicount = 0;
+    long long emptycount = 0;
     
     // define variables
     //string fqline1;
@@ -1101,11 +1101,11 @@ vector< int > parseFastqEnzymegz(string fastqgz1, string fastqgz2,string basenam
     //ofstream chim2 ( (basename + "_2.chim.fastq").c_str() );
     
     // keep track of PET types
-    int samecount = 0;
-    int validcount = 0;
-    int chimcount = 0;
-    int ambicount = 0;
-    int emptycount = 0;
+    long long samecount = 0;
+    long long validcount = 0;
+    long long chimcount = 0;
+    long long ambicount = 0;
+    long long emptycount = 0;
     
     // define variables
     //string fqline1;
